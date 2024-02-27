@@ -82,7 +82,7 @@ sysctl -p
 ### 1.4. Получение исходного кода OpenVPN и XOR Patch
 Вы должны использовать соответствующие версии OpenVPN и патча XOR.
 
-Откройте браузер и перейдите на страницу выпусков GitHub для OpenVPN. Определите последний номер выпуска. На момент написания это версия v2.5_beta3. Возможно, на момент прочтения этой статьи это будет более поздняя версия. Мы будем использовать v2.5_beta3 в наших примерах, хотя вам может потребоваться заменить его.
+Откройте браузер и перейдите на страницу выпусков GitHub для OpenVPN. Определите последний номер выпуска. На момент написания это версия openvpn-2.6.8. Возможно, на момент прочтения этой статьи это будет более поздняя версия. Мы будем использовать openvpn-2.6.8 в наших примерах, хотя вам может потребоваться заменить его.
 
 Скачайте и извлеките архив OpenVPN для вашей версии:
 
@@ -487,3 +487,53 @@ sudo /usr/local/sbin/openvpn --config debian10.conf
 Посетите IP Chicken.
 
 Вы должны увидеть IP-адрес вашего удаленного сервера, а не вашего локального клиента.
+
+### 2.9. Добавление клиентов OpenVPN
+Создайте и подпишите сертификат с ключом для клиента:
+
+```bash
+cd ~/easyrsa/
+./easyrsa gen-req debian10 nopass
+./easyrsa sign-req client debian10
+```
+
+Скопируйте ключи и сертификат клиента в директорию OpenVPN:
+
+```bash
+cp pki/private/debian10.key /etc/openvpn/client
+cp pki/issued/debian10.crt /etc/openvpn/client
+```
+
+Создайте конфигурационный файл для клиента:
+
+```bash
+cd ~/Downloads
+nano debian10.conf
+```
+
+Вставьте следующие детали конфигурации, адаптируя их под вашу ситуацию:
+
+Замените "yy.yy.yy.yy" на публичный IP-адрес вашего сервера
+Замените "16273" на ваш случайный порт
+Замените "r7EaFR2DshpQT+QMfQGYO5BXC2BAV8JG" на ваш случайный код обфускации
+
+```bash
+client
+dev tun
+proto udp
+remote yy.yy.yy.yy 16273
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca ca.crt
+cert debian10.crt
+key debian10.key
+remote-cert-tls server
+cipher AES-128-GCM
+tls-crypt tls-crypt.key
+verb 3
+scramble obfuscate r7EaFR2DshpQT+QMfQGYO5BXC2BAV8JG
+```
+
+Сохраните файл.
