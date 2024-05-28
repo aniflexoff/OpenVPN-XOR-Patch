@@ -87,14 +87,14 @@ sysctl -p
 Скачайте и извлеките архив OpenVPN для вашей версии:
 
 ```bash
-wget https://github.com/aniflexoff/OpenVPN-XOR-Patch/releases/download/files/openvpn-2.6.8.tar.gz
+wget https://github.com/aniflexoff/OpenVPN-XOR-Patch/releases/download/Linux/openvpn-2.6.8.tar.gz
 tar -xvf openvpn-2.6.8.tar.gz
 ```
 
 Скачайте и извлеките репозиторий Tunnelblick с патчами XOR:
 
 ```bash
-wget https://github.com/aniflexoff/OpenVPN-XOR-Patch/releases/download/files/Tunnelblick-master.zip
+wget https://github.com/aniflexoff/OpenVPN-XOR-Patch/releases/download/Linux/Tunnelblick-master.zip
 apt install unzip -y
 unzip Tunnelblick-master.zip
 ```
